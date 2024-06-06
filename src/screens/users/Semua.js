@@ -39,6 +39,7 @@ const Semua = ({navigation, route}) => {
 
     const [isDataComplete, setIsDataComplete] = useState(false);
     const [alertVisible, setAlertVisible] = useState(false);
+    const [alertNumVisible, setAlertNumVisible] = useState(false);
     const [analysisResult, setAnalysisResult] = useState({
     tdcg: '',
     rogers: '',
@@ -50,7 +51,9 @@ const Semua = ({navigation, route}) => {
     performaTrafo: 0,
     kondisiTrafo: '',
     tindakanTrafo: '',
-    predUmur:''
+    predUmur:'',
+    hari: '', 
+    hari_selisih: 0,
 });
 const [isLoading, setIsLoading] = useState(false);
     const [dataUsers, setDataUsers] = useState([])
@@ -447,6 +450,14 @@ const tambah_hari = (tanggal_awal, selisih_hari) => {
     return tgl_hasil.toISOString().split('T')[0];
 }
 
+const Hasil_hari = (tanggal_awal, selisih_hari) => {
+    const tgl_awal = new Date(tanggal_awal);
+    const tgl_hasil = new Date(tgl_awal.setDate(tgl_awal.getDate() + selisih_hari));
+    const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const tgl = new Date(tgl_hasil);
+    return hari[tgl.getDay()];
+}
+
 const Purifikasi_time = (ppm_day, TDCG_Akhir) => {
     let purifikasi = 0;
     purifikasi = (1921 - TDCG_Akhir) / ppm_day;
@@ -631,6 +642,8 @@ const handleAnalysis = () => {
         // Batas Perhitungan Umur Trafo
         // Hitung waktu purifikasi
         const purifikasiTime = tambah_hari(endDate, calculatePurifikasiTime());
+        const hari = Hasil_hari(endDate, calculatePurifikasiTime());
+        const hari_selisih = calculatePurifikasiTime();
 
         // Tetapkan hasil analisis ke variabel state
         setAnalysisResult({
@@ -645,6 +658,8 @@ const handleAnalysis = () => {
             kondisiTrafo: kondisiTrafo,
             tindakanTrafo: tindakanTrafo,
             predUmur:predUmur,
+            hari: hari,
+            hari_selisih: hari_selisih
         });
         navigation.navigate('Hasil', {userId: userId, source: 'Semua',
             analysisResult: {
@@ -659,6 +674,8 @@ const handleAnalysis = () => {
                 kondisiTrafo: kondisiTrafo,
                 tindakanTrafo: tindakanTrafo,
                 predUmur:predUmur,
+                hari: hari,
+                hari_selisih: hari_selisih,
             }
         });
     }
@@ -666,66 +683,18 @@ const handleAnalysis = () => {
 
 
     //
-
-    const handleTdcgAwalValue = (text) =>{
-        setawalTdcgValue(text);
-    }
-
-    const handleTdcgAkhirValue = (text) =>{
-        setakhirTdcgValue(text);
-    }
-
-    const handleDSValue = (text) =>{
-        setDSValue(text);
-    }
-
-    const handleAcidValue = (text) =>{
-        setAcidValue(text);
-    }
-
-    const handleMoisureValue = (text) =>{
-        setMoisureValue(text);
-    }
-
-    const handleITValue = (text) =>{
-        setITValue(text);
-    }
-
-    const handleTCValue = (text) =>{
-        setTCValue(text);
-    }
-
-    const handleFuranValue = (text) =>{
-        setFuranValue(text);
-    }
-
-    const handleH2Value = (text) =>{
-        setH2Value(text);
-    }
-
-    const handleCH4Value = (text) =>{
-        setCH4Value(text);
-    }
-
-    const handleC2H2Value = (text) =>{
-        setC2H2Value(text);
-    }
-
-    const handleC2H4Value = (text) =>{
-        setC2H4Value(text);
-    }
-
-    const handleC2H6Value = (text) =>{
-        setC2H6Value(text);
-    }
-
-    const handleCOValue = (text) =>{
-        setCOValue(text);
-    }
-
-    const handleCO2Value = (text) =>{
-        setCO2Value(text);
-    }
+    const handleInputChange = (text, setValue) => {
+        // Memeriksa apakah nilai yang dimasukkan adalah angka
+        if (/^\d*\.?\d*$/.test(text)) {
+            setValue(text);
+        } else {
+            // Jika nilai yang dimasukkan bukan angka, tampilkan pesan kesalahan
+            setAlertNumVisible(true);
+        }
+    };
+    const handleNumClose = () => {
+        setAlertNumVisible(false);
+    };
 
     const navigateToHome = () => {
         navigation.replace('Mainmenu', {userId: userId});
@@ -764,6 +733,8 @@ const handleAnalysis = () => {
                 kondisiTrafo: analysisResult.kondisiTrafo,
                 tindakanTrafo: analysisResult.tindakanTrafo,
                 predUmur:analysisResult.predUmur,
+                hari:analysisResult.hari,
+                hari_selisih: analysisResult.hari_selisih,
             });
         }
     }, [isDataComplete]);
@@ -816,17 +787,10 @@ const checkDataCompletion = () => {
         setAlertVisible(false);
     };
 
-    // Menghitung rentang tanggal
-    const calculateDateRange = () => {
-        const differenceInTime = endDate.getTime() - startDate.getTime();
-        const differenceInDays = differenceInTime / (1000 * 3600 * 24);
-        return differenceInDays;
-    }
-
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
         <View style={{ flex: 1, flexDirection: 'column', paddingBottom: 20, marginHorizontal: 'auto', width: '100%', backgroundColor: '#FFF6E9', maxWidth: 480 }}>
-            <View style={{ flexDirection: 'column', paddingTop: 4, paddingRight: 2.5, paddingBottom: 40, paddingLeft: 5, width: '100%',height:'16%', backgroundColor:'#FFC107' }}>
+            <View style={{ flexDirection: 'column', paddingTop: 4, paddingRight: 2.5, paddingBottom: 40, paddingLeft: 5, width: '100%',height:'16', backgroundColor:'#FFC107' }}>
                 <View style={{ marginTop: '10%', marginLeft: '2%' }}>
                     <TouchableOpacity onPress={navigateToHome} style={{ position: 'absolute', top: 20, left: 5, borderRadius: 50, backgroundColor: '#FFFFFF', padding: 10 }}>
                         <Ionicons name="arrow-back" size={24} color="black" />
@@ -843,23 +807,23 @@ const checkDataCompletion = () => {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 }}>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
                         <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>H2</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={H2Value} onChangeText={handleH2Value} />
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={H2Value} onChangeText={(text) => handleInputChange(text, setH2Value)} keyboardType="numeric"/>
                         <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600}}>C2H4</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={C2H4Value} onChangeText={handleC2H4Value}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={C2H4Value} onChangeText={(text) => handleInputChange(text, setC2H4Value)} keyboardType="numeric"/>
                         <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600}}>CO2</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={CO2Value} onChangeText={handleCO2Value}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={CO2Value} onChangeText={(text) => handleInputChange(text, setCO2Value)} keyboardType="numeric"/>
                     </View>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
                         <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>CH4</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={CH4Value} onChangeText={handleCH4Value}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={CH4Value} onChangeText={(text) => handleInputChange(text, setCH4Value)} keyboardType="numeric"/>
                         <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600}}>C2H6</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={C2H6Value} onChangeText={handleC2H6Value}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={C2H6Value} onChangeText={(text) => handleInputChange(text, setC2H6Value)} keyboardType="numeric"/>
                     </View>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
                         <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>C2H2</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={C2H2Value} onChangeText={handleC2H2Value}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={C2H2Value} onChangeText={(text) => handleInputChange(text, setC2H2Value)} keyboardType="numeric"/>
                         <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600}}>CO</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={COValue} onChangeText={handleCOValue}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={COValue} onChangeText={(text) => handleInputChange(text, setCOValue)} keyboardType="numeric"/>
                     </View>
                 </View>
 
@@ -868,11 +832,11 @@ const checkDataCompletion = () => {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, width: '100%' }}>
                     <View style={{ alignItems: 'flex-start' }}>
                         <Text style={{color:'#004268',fontWeight: 600,marginBottom: '2%',}}>Awal</Text>
-                        <TextInput style={{ height: 52, width: 150, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={awalTdcgValue} onChangeText={handleTdcgAwalValue}/>
+                        <TextInput style={{ height: 52, width: 150, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={awalTdcgValue} onChangeText={(text) => handleInputChange(text, setawalTdcgValue)} keyboardType="numeric"/>
                     </View>
                     <View style={{ alignItems: 'flex-start' }}>
                         <Text style={{color:'#004268',fontWeight: 600,marginBottom: '2%',}}>Akhir</Text>
-                        <TextInput style={{ height: 52, width: 150, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={akhirTdcgValue} onChangeText={handleTdcgAkhirValue}/>
+                        <TextInput style={{ height: 52, width: 150, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={akhirTdcgValue} onChangeText={(text) => handleInputChange(text, setakhirTdcgValue)} keyboardType="numeric"/>
                     </View>
                 </View>
 
@@ -946,19 +910,19 @@ const checkDataCompletion = () => {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, width: '100%' }}>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
                         <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>Dielectric Strength</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={DSValue} onChangeText={handleDSValue}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={DSValue} onChangeText={(text) => handleInputChange(text, setDSValue)} keyboardType="numeric"/>
                         <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600}}>Acidity</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={AcidValue} onChangeText={handleAcidValue}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={AcidValue} onChangeText={(text) => handleInputChange(text, setAcidValue)} keyboardType="numeric"/>
                     </View>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
                         <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>Interfacial Tension</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={ITValue} onChangeText={handleITValue}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={ITValue} onChangeText={(text) => handleInputChange(text, setITValue)} keyboardType="numeric"/>
                         <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600}}>Furan</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={FuranValue} onChangeText={handleFuranValue}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={FuranValue} onChangeText={(text) => handleInputChange(text, setFuranValue)} keyboardType="numeric"/>
                     </View>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
                         <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>Moisure</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={MoisureValue} onChangeText={handleMoisureValue}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={MoisureValue} onChangeText={(text) => handleInputChange(text, setMoisureValue)} keyboardType="numeric"/>
                     </View>
                 </View>
 
@@ -966,7 +930,7 @@ const checkDataCompletion = () => {
 
                 <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
                     <Text style={{ marginBottom: '2%', color:'#004268', fontWeight: 600}}>Tap Changer</Text>
-                    <TextInput style={{ height: 52, width: 87, borderColor: '#C0BDBD', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={TCValue} onChangeText={handleTCValue}/>
+                    <TextInput style={{ height: 52, width: 87, borderColor: '#C0BDBD', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={TCValue} onChangeText={(text) => handleInputChange(text, setTCValue)} keyboardType="numeric"/>
                 </View>
 
                 <TouchableOpacity 
@@ -997,6 +961,28 @@ const checkDataCompletion = () => {
                             <TouchableHighlight
                                 style={styles.buttonContainer}
                                 onPress={handleClose}
+                                underlayColor="#DDDDDD"
+                            >
+                                <Text style={styles.buttonText}>OK</Text>
+                            </TouchableHighlight>
+                        </View>
+                    </View>
+                </Modal>
+                <Modal
+                    visible={alertNumVisible}
+                    transparent={true}
+                    animationType="fade"
+                    onRequestClose={handleClose}
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <View style={styles.iconContainer}>
+                                <Text style={styles.iconText}>X</Text>
+                            </View>
+                            <Text style={styles.messageText}>Data yang valid hanyalah angka!</Text>
+                            <TouchableHighlight
+                                style={styles.buttonContainer}
+                                onPress={handleNumClose}
                                 underlayColor="#DDDDDD"
                             >
                                 <Text style={styles.buttonText}>OK</Text>

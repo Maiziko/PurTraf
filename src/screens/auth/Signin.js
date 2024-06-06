@@ -37,6 +37,7 @@ const Signin = () => {
         })
     },[]);
 
+
     const handleSignUp = () => {
         navigation.replace('Signup');
     };
@@ -159,8 +160,6 @@ const Signin = () => {
                             <Text style={{ fontSize: 14, fontWeight: '600', color: '#004268', marginLeft: 5 }}>Sign up</Text>
                         </TouchableOpacity>
                     </View>
-
-
                 </View>
             </View>
         </KeyboardAvoidingView>

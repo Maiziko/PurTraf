@@ -289,8 +289,9 @@ const UpdateProfile = ({ route, navigation }) => {
 
         <View style={{ justifyContent: 'center', marginTop: 10, marginLeft: 20, marginRight: 20}}>
             <Text style={{ fontSize: 18,marginBottom: 4,color: '#004268',fontWeight: 'bold' }}>Pilih Jenis Kelamin</Text>
-            <View style={{ backgroundColor: '#FFC97A',paddingHorizontal: 15,paddingVertical: 10, borderRadius: 10,color:'#004268', }}>
+            <View style={{ backgroundColor: '#FFC97A',paddingHorizontal: 15, borderRadius: 10,color:'#004268', borderColor: '#FFAC33', borderWidth: 1}}>
                 <Picker
+                style={{ color:'#004268', }}
                 selectedValue={inputs.gender.value}
                 onValueChange={(itemValue, itemIndex) =>
                 setInputs((prevState) => ({

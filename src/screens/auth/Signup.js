@@ -111,6 +111,8 @@ const Signup = () => {
             gender: dataRegister.gender
         };
 
+        console.log(docRef);
+
         await setDoc(doc(firestore, "users", userId), docRef);
         //const getId = auth.currentUser;
         // const userId = getId.uid;

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { firebaseAuth, firestore } from '../../config/firebase'
-import { destroyKey, getKey } from '../../config/localStorage'
+import { firestore } from '../../config/firebase'
 import { doc, getDoc } from 'firebase/firestore';
 
 const Hasil = ({ navigation, route }) => {
   // Set state dengan nilai dari route.params saat komponen dimount
-  const { tdcg, rogers, keyGas, doernenburg, duval, co2co, purifikasiTime, performaTrafo, kondisiTrafo, tindakanTrafo, predUmur, source } = route.params;
+  const { tdcg, rogers, keyGas, doernenburg, duval, co2co, purifikasiTime, performaTrafo, kondisiTrafo, tindakanTrafo, predUmur, source, hari, hari_selisih } = route.params;
   const [isLoading, setIsLoading] = useState(false);
     const [dataUsers, setDataUsers] = useState([]);
     const { userId } = route.params;
@@ -43,27 +42,53 @@ const Hasil = ({ navigation, route }) => {
         </View>
       </View>
 
-      <Text style={{ fontSize: 28, fontWeight: '600',paddingLeft: '5%', marginBottom: 20,marginTop:'5%', color:'#F69912' }}>Keadaan Trafomu</Text>
-            
-      <View style={{ justifyContent: 'space-between', marginBottom: 20,alignItems: 'center' }}>
-        <View style={{padding: 20,width: 'auto', height:'auto',backgroundColor: '#FFCA7E',borderRadius: 10}}>
+      <Text style={{ fontSize: 28, fontWeight: '600',paddingLeft: '5%', marginBottom: 5,marginTop:10, color:'#F69912' }}>Keadaan Trafomu</Text>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 40 }}>    
+      <View style={{ justifyContent: 'space-between', marginBottom: 20,alignItems: 'center',padding: 10 }}>
+        <View style={{padding: 20,width: 'auto', height:'auto',backgroundColor: '#FDEBD0',borderRadius: 10, }}>
           {(source !== 'Umur' && source !== 'Purifikasi') && (
-            <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:20,textAlign: 'justify'}}>Hasil dengan metode TDCG : <Text style={{ fontWeight:'bold' }}>{tdcg}</Text></Text>
+            <View style={{padding: 8, width: 'auto', height:'auto',backgroundColor: '#FFFFFF',borderRadius: 5, }}>
+              <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:17,textAlign: 'justify', fontWeight: 'bold'}}>Analisis Gangguan Metode TDCG</Text>
+              <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:17,textAlign: 'justify'}}>Berdasarkan analisis dengan metode <Text style={{ fontWeight:'bold' }}>TDCG</Text> diperoleh hasil bahwa : <Text style={{ fontWeight:'bold' }}>{tdcg}</Text></Text>
+            </View>
           )}
-          {(source !== 'Umur' && source !== 'Purifikasi') && (<Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:20,textAlign: 'justify'}}>Hasil dengan metode Rogers : <Text style={{ fontWeight:'bold' }}>{rogers}</Text> </Text>)}
-          {(source !== 'Umur' && source !== 'Purifikasi') && (<Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:20,textAlign: 'justify'}}>Hasil dengan metode KeyGas : <Text style={{ fontWeight:'bold' }}>{keyGas}</Text></Text>)}
+          {(source !== 'Umur' && source !== 'Purifikasi') && (
+            <View style={{ marginTop:'5%', padding: 8, width: 'auto', height:'auto',backgroundColor: '#FFFFFF',borderRadius: 5,}}>
+              <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:17,textAlign: 'justify', fontWeight: 'bold'}}>Analisis Gangguan Metode Rogers</Text>
+              <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:17,textAlign: 'justify'}}>Berdasarkan analisis dengan metode <Text style={{ fontWeight:'bold' }}>Rogers</Text> diperoleh hasil bahwa : <Text style={{ fontWeight:'bold' }}>{rogers}</Text></Text>
+            </View>)}
+          {(source !== 'Umur' && source !== 'Purifikasi') && (
+          <View style={{ marginTop:'5%',padding: 8, width: 'auto', height:'auto',backgroundColor: '#FFFFFF',borderRadius: 5,}}>
+              <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:17,textAlign: 'justify', fontWeight: 'bold'}}>Analisis Gangguan Metode KeyGas</Text>
+              <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:17,textAlign: 'justify'}}>Berdasarkan analisis dengan metode <Text style={{ fontWeight:'bold' }}>KeyGas</Text> diperoleh hasil bahwa : <Text style={{ fontWeight:'bold' }}>{keyGas}</Text></Text>
+            </View>)}
           {/* {(source !== 'Umur' && source !== 'Purifikasi') && (<Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:20,textAlign: 'justify'}}>Hasil dengan metode Doernenburg : {doernenburg}</Text>)} */}
-          {(source !== 'Umur' && source !== 'Purifikasi') && (<Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:20,textAlign: 'justify'}}>Hasil dengan metode Doernenburg : <Text style={{ fontWeight:'bold' }}>{doernenburg}</Text></Text>)}
-          {(source !== 'Umur' && source !== 'Purifikasi') && (<Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:20,textAlign: 'justify'}}>Hasil dengan metode CO2CO : <Text style={{ fontWeight:'bold' }}>{co2co}</Text></Text>)}
+          {(source !== 'Umur' && source !== 'Purifikasi') && (
+          <View style={{ marginTop:'5%', padding: 8, width: 'auto', height:'auto',backgroundColor: '#FFFFFF',borderRadius: 5,}}>
+              <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:17,textAlign: 'justify', fontWeight: 'bold'}}>Analisis Gangguan Metode Doernenburg</Text>
+              <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:17,textAlign: 'justify'}}>Berdasarkan analisis dengan metode <Text style={{ fontWeight:'bold' }}>Doernenburg</Text> diperoleh hasil bahwa : <Text style={{ fontWeight:'bold' }}>{doernenburg}</Text></Text>
+            </View>)}
+          {(source !== 'Umur' && source !== 'Purifikasi') && (
+            <View style={{ marginTop:'5%', padding: 8, width: 'auto', height:'auto',backgroundColor: '#FFFFFF',borderRadius: 5,}}>
+              <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:17,textAlign: 'justify', fontWeight: 'bold'}}>Analisis Gangguan Metode CO 2 CO</Text>
+              <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:17,textAlign: 'justify'}}>Berdasarkan analisis dengan metode <Text style={{ fontWeight:'bold' }}>CO2CO</Text> diperoleh hasil bahwa : <Text style={{ fontWeight:'bold' }}>{co2co}</Text></Text>
+            </View>)}
           {/* <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:20,textAlign: 'justify'}}>Hasil dengan metode Duval : {duval}</Text> */}
           {(source === 'Semua' || source === 'Purifikasi') && (
-            <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:20,textAlign: 'justify'}}>Waktu Purifikasi : {purifikasiTime}</Text>
+            <View style={{ marginTop:'5%',padding: 8, width: 'auto', height:'auto',backgroundColor: '#FFFFFF',borderRadius: 5,}}>
+              <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:17,textAlign: 'justify', fontWeight: 'bold'}}>Hasil Perhitungan Waktu Purifikasi</Text>
+              <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:17,textAlign: 'justify'}}>Berdasarkan hasil perhitungan, diprediksi waktu perhitungan purifikasi minyak trafo terhitung <Text style={{ fontWeight:'bold' }}>{hari_selisih} hari</Text> sejak pengujian sebelumnya atau lebih tepatnya pada <Text style={{ fontWeight:'bold' }}>{hari}, {purifikasiTime}</Text></Text>
+            </View>
           )}
           {(source === 'Semua' || source === 'Umur') && (
-            <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:20,textAlign: 'justify'}}>Berdasarkan hasil perhitungan persentase nilai performa kondisi transformator, nilainya menunjukkan sebesar {performaTrafo !== undefined ? performaTrafo.toFixed(2) : ''}% yang berarti trafo berada pada kondisi {kondisiTrafo} dan memerlukan tindakan {tindakanTrafo} dengan prediksi umur {predUmur} </Text>
+            <View style={{ marginTop:'5%',padding: 8, width: 'auto', height:'auto',backgroundColor: '#FFFFFF',borderRadius: 5,}}>
+              <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:17,textAlign: 'justify', fontWeight: 'bold'}}>Hasil Perhitungan Kesehatan dan Umur</Text>
+              <Text style={{ marginBottom: 2, color:'#C57604',fontWeight: 400,fontSize:17,textAlign: 'justify'}}>Berdasarkan hasil perhitungan persentase nilai performa kondisi transformator, nilainya menunjukkan sebesar <Text style={{ fontWeight:'bold' }}>{performaTrafo !== undefined ? performaTrafo.toFixed(2) : ''}%</Text> yang berarti trafo berada pada kondisi <Text style={{ fontWeight:'bold' }}>{kondisiTrafo}</Text> dan memerlukan tindakan <Text style={{ fontWeight:'bold' }}>{tindakanTrafo}</Text> dengan prediksi umur <Text style={{ fontWeight:'bold' }}>{predUmur}</Text> </Text>
+            </View>
           )}
         </View>
       </View>
+      </ScrollView>
     </View>
   );
 }

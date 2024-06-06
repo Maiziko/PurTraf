@@ -82,7 +82,7 @@ const Profil = ({navigation, route}) => {
                                     gender: dataUsers.gender
                 })}>
 
-                                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#004268' }}>Edit Profil</Text>
+                                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#ffffff' }}>Edit Profil</Text>
                             </TouchableOpacity>
         </View>
 
@@ -90,40 +90,40 @@ const Profil = ({navigation, route}) => {
 
         <View style={{ marginLeft: '10%' }}>
                 
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', height: 52, width: 310, paddingHorizontal: 8, paddingVertical: 4, marginTop: 15, backgroundColor: '#FFC97A', borderRadius: 10 }}>
-                        <Text style={{ paddingLeft: 20, fontSize: 15, fontWeight: 'bold', color: '#004268' }}>{dataUsers.fullname}</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', height: 52, width: 310, paddingHorizontal: 8, paddingVertical: 4, marginTop: 15, backgroundColor: '#FFC97A', borderRadius: 10,  borderColor: '#FFAC33', borderWidth: 1 }}>
+                        <Text style={{ paddingLeft: 20, fontSize: 15, fontWeight: 'bold', color: '#004268', }}>{dataUsers.fullname}</Text>
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', height: 52, width: 310, paddingHorizontal: 8, paddingVertical: 4, marginTop: 15, backgroundColor: '#FFC97A', borderRadius: 10 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', height: 52, width: 310, paddingHorizontal: 8, paddingVertical: 4, marginTop: 15, backgroundColor: '#FFC97A', borderRadius: 10,  borderColor: '#FFAC33', borderWidth: 1 }}>
                         <Text style={{ paddingLeft: 20, fontSize: 15, fontWeight: 'bold', color: '#004268' }}>{dataUsers.gender === true ? 'Laki-laki' : 'Perempuan'}</Text>
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', height: 52, width: 310, paddingHorizontal: 8, paddingVertical: 4, marginTop: 15, backgroundColor: '#FFC97A', borderRadius: 10 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', height: 52, width: 310, paddingHorizontal: 8, paddingVertical: 4, marginTop: 15, backgroundColor: '#FFC97A', borderRadius: 10,  borderColor: '#FFAC33', borderWidth: 1 }}>
                         <Text style={{ paddingLeft: 20, fontSize: 15, fontWeight: 'bold', color: '#004268' }}>{dataUsers.alamat}</Text>
                 </View>
                 </View>
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom:'30%'}}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom:'20%'}}>
                     <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', height: 52, width: 100, paddingHorizontal: 8, paddingVertical: 4, marginTop: 15, backgroundColor: '#DD310C', borderRadius: 10, }} onPress={handleLogout}>
                             <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#ffffff' }}>Log Out</Text>
                     </TouchableOpacity>
                 </View>
 
       <View style={{ flexDirection: 'row', position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-        <TouchableOpacity onPress={navigateToHome} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 4, backgroundColor: '#FFC107', borderTopRightRadius: 10 }}>
+        <TouchableOpacity onPress={navigateToHome} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 4, backgroundColor: '#FFC107', borderTopRightRadius: 11 , borderTopLeftRadius: 11}}>
           <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, paddingVertical: 2.5 }}>
             <Image
               source={require('../../../assets/Home.png')}
               style={{ width: 24, height: 24 }}
             />
-            <Text style={{ marginTop: 10, fontSize: 14, fontWeight: 'bold', color: 'white' }}>Home</Text>
+            <Text style={{ marginTop: 5, fontSize: 14, fontWeight: 'bold', color: 'white' }}>Home</Text>
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 12, backgroundColor: '#FFD54F', height: 90, borderTopLeftRadius: 10 }}>
+        <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 12, backgroundColor: '#FFD54F', height: 70, borderTopLeftRadius: 11, borderTopRightRadius: 11 }}>
           <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, paddingVertical: 2.5 }}>
             <Image
               source={require('../../../assets/Profile.png')}
               style={{ width: 24, height: 24 }}
             />
-            <Text style={{ marginTop: 10, fontSize: 14, fontWeight: 'bold', color: '#424242' }}>Profile</Text>
+            <Text style={{ marginTop: 5, fontSize: 14, fontWeight: 'bold', color: '#424242' }}>Profile</Text>
           </View>
         </TouchableOpacity>
       </View>

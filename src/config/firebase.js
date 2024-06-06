@@ -5,14 +5,14 @@ import { initializeAuth, getReactNativePersistence } from "firebase/auth"
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAHceF7g_Xh0_BYKJbhU_QfSiGKlMEqlvc",
-    authDomain: "purtraf-dd96d.firebaseapp.com",
-    databaseURL: "https://purtraf-dd96d-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "purtraf-dd96d",
-    storageBucket: "purtraf-dd96d.appspot.com",
-    messagingSenderId: "229695851215",
-    appId: "1:229695851215:web:b9106af97e4b50c27305ba",
-    measurementId: "G-K1E26JHPE5"
+    apiKey: 
+    authDomain: 
+    databaseURL: 
+    projectId: 
+    storageBucket: 
+    messagingSenderId: 
+    appId: 
+    measurementId: 
 };
 
 // fungsi initializeApp dengan objek firebaseConfig bertindak sebagai argumen untuk menginisialisasi Firebase dalam 

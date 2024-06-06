@@ -64,6 +64,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     color:'#004268',
+    borderColor: '#FFAC33', 
+    borderWidth: 1
   },
   invalidLabel: {
     color: 'red'

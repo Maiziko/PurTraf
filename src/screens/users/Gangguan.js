@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, Button, TextInput,  Modal, TouchableHighlight, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, TextInput,  Modal, TouchableHighlight, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { KeyboardAvoidingView, Platform } from 'react-native';
-import { firebaseAuth, firestore } from '../../config/firebase'
-import { destroyKey, getKey } from '../../config/localStorage'
+import { firestore } from '../../config/firebase'
 import { doc, getDoc } from 'firebase/firestore';
 
 const Gangguan = ({navigation, route}) => {
@@ -20,6 +17,7 @@ const Gangguan = ({navigation, route}) => {
     // Chech Data 
     const [isDataComplete, setIsDataComplete] = useState(false);
     const [alertVisible, setAlertVisible] = useState(false);
+    const [alertNumVisible, setAlertNumVisible] = useState(false);
     const [analysisResult, setAnalysisResult] = useState({
     tdcg: '',
     rogers: '',
@@ -186,34 +184,16 @@ const CO2_CO_Ratio_Method = (Data_Gas) => {
     }
     return fault;
 }
-    // Function Ngisi Gas 
-    const handleH2Value = (text) =>{
-        setH2Value(text);
-    }
 
-    const handleCH4Value = (text) =>{
-        setCH4Value(text);
-    }
-
-    const handleC2H2Value = (text) =>{
-        setC2H2Value(text);
-    }
-
-    const handleC2H4Value = (text) =>{
-        setC2H4Value(text);
-    }
-
-    const handleC2H6Value = (text) =>{
-        setC2H6Value(text);
-    }
-
-    const handleCOValue = (text) =>{
-        setCOValue(text);
-    }
-
-    const handleCO2Value = (text) =>{
-        setCO2Value(text);
-    }
+    const handleInputChange = (text, setValue) => {
+        // Memeriksa apakah nilai yang dimasukkan adalah angka
+        if (/^\d*\.?\d*$/.test(text)) {
+            setValue(text);
+        } else {
+            // Jika nilai yang dimasukkan bukan angka, tampilkan pesan kesalahan
+            setAlertNumVisible(true);
+        }
+    };
 
 
     const navigateToHome = () => {
@@ -327,10 +307,14 @@ const CO2_CO_Ratio_Method = (Data_Gas) => {
         setAlertVisible(false);
     };
 
+    const handleNumClose = () => {
+        setAlertNumVisible(false);
+    };
+
     return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
-        <View style={{ flex: 1, flexDirection: 'column', paddingBottom: 20, marginHorizontal: 'auto', width: '100%', backgroundColor: '#FFF6E9', maxWidth: 480 }}>
-            <View style={{ flexDirection: 'column', paddingTop: 4, paddingRight: 2.5, paddingBottom: 40, paddingLeft: 5, width: '100%',height:'16%', backgroundColor:'#FFC107' }}>
+
+        <View style={{ flex: 1, paddingBottom: 20, marginHorizontal: 'auto', width: '100%', backgroundColor: '#FFF6E9', maxWidth: 480 }}>
+            <View style={{ position : 'static', paddingTop: 4, paddingRight: 2.5, paddingBottom: 40, paddingLeft: 5, width: '100',height:'16', backgroundColor:'#FFC107' }}>
                 <View style={{ marginTop: '10%', marginLeft: '2%' }}>
                     <TouchableOpacity onPress={navigateToHome} style={{ position: 'absolute', top: 20, left: 5, borderRadius: 50, backgroundColor: '#FFFFFF', padding: 10 }}>
                         <Ionicons name="arrow-back" size={24} color="black" />
@@ -347,23 +331,23 @@ const CO2_CO_Ratio_Method = (Data_Gas) => {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 }}>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
                         <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>H2</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={H2Value} onChangeText={handleH2Value}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={H2Value} onChangeText={(text) => handleInputChange(text, setH2Value)} keyboardType="numeric"/>
                         <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600}}>C2H4</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={C2H4Value} onChangeText={handleC2H4Value}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={C2H4Value} onChangeText={(text) => handleInputChange(text, setC2H4Value)} keyboardType="numeric"/>
                         <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600}}>CO2</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={CO2Value} onChangeText={handleCO2Value}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={CO2Value} onChangeText={(text) => handleInputChange(text, setCO2Value)} keyboardType="numeric"/>
                     </View>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
                         <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>CH4</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={CH4Value} onChangeText={handleCH4Value}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={CH4Value} onChangeText={(text) => handleInputChange(text, setCH4Value)} keyboardType="numeric"/>
                         <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600}}>C2H6</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={C2H6Value} onChangeText={handleC2H6Value}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={C2H6Value} onChangeText={(text) => handleInputChange(text, setC2H6Value)} keyboardType="numeric"/>
                     </View>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
                         <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>C2H2</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={C2H2Value} onChangeText={handleC2H2Value}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={C2H2Value} onChangeText={(text) => handleInputChange(text, setC2H2Value)} keyboardType="numeric"/>
                         <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600}}>CO</Text>
-                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={COValue} onChangeText={handleCOValue}/>
+                        <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={COValue} onChangeText={(text) => handleInputChange(text, setCOValue)} keyboardType="numeric"/>
                     </View>
                 </View>
 
@@ -403,8 +387,29 @@ const CO2_CO_Ratio_Method = (Data_Gas) => {
                         </View>
                     </View>
                 </Modal>
+                <Modal
+                    visible={alertNumVisible}
+                    transparent={true}
+                    animationType="fade"
+                    onRequestClose={handleClose}
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <View style={styles.iconContainer}>
+                                <Text style={styles.iconText}>X</Text>
+                            </View>
+                            <Text style={styles.messageText}>Data yang valid hanyalah angka!</Text>
+                            <TouchableHighlight
+                                style={styles.buttonContainer}
+                                onPress={handleNumClose}
+                                underlayColor="#DDDDDD"
+                            >
+                                <Text style={styles.buttonText}>OK</Text>
+                            </TouchableHighlight>
+                        </View>
+                    </View>
+                </Modal>
         </View>
-        </KeyboardAvoidingView>
     );
 
 }
