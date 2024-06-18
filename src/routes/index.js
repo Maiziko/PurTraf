@@ -13,6 +13,7 @@ import Purifikasi from '../screens/users/Purifikasi'
 import Umur from '../screens/users/Umur'
 import Semua from '../screens/users/Semua'
 import Hasil from '../screens/users/Hasil'
+import { LanguageProvider } from '../utils/LanguageContext'
 
 // Stack  adalah tumpukan navigator yang digunakan untuk mengelola navigasi di dalam aplikasi ini. 
 // Ini adalah konfigurasi awal untuk stack navigator. dengan mengimpor Modul createStackNavigator kita akan membuat 
@@ -30,6 +31,7 @@ const Stack = createStackNavigator()
 // headerShown diatur sebagai false untuk menghilangkan header pada rute yang menampilkan screen login dan register.
 const Routes = () => {
     return (
+        <LanguageProvider>
         <NavigationContainer>
             <Stack.Navigator>
                 <Stack.Screen name='Signin' component={Signin} options={{ headerShown: false }} />
@@ -45,6 +47,7 @@ const Routes = () => {
                 <Stack.Screen name="Mainmenu" component={Mainmenu} options={{ headerShown: false }}/> 
             </Stack.Navigator>
         </NavigationContainer>
+        </LanguageProvider>
     )
 }
 

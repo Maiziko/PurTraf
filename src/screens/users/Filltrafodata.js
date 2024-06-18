@@ -5,8 +5,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { firebaseAuth, firestore } from '../../config/firebase'
 import { destroyKey, getKey } from '../../config/localStorage'
 import { doc, getDoc } from 'firebase/firestore';
+import * as Localization from 'expo-localization';
+import i18n from '../../../i18n';
+import { useLanguage } from '../../utils/LanguageContext';
+
 
 const Filltrafodata = ({ navigation, route }) => {
+    const { language } = useLanguage();
     const [namaPerusahaan, setNamaPerusahaan] = useState('');
     const [namaTrafo, setNamaTrafo] = useState('');
     const [lokasiTrafo, setLokasiTrafo] = useState('');
@@ -82,21 +87,21 @@ const Filltrafodata = ({ navigation, route }) => {
                         style={{ width: 50, height: 70, maxWidth: '100%', borderColor: '#FF9800', aspectRatio: 0.69, width: 106, height: 'auto', justifyContent: 'center' }}
                     />
                     <Text className="self-center mt-4 text-3xl font-semibold leading-9 text-center text-sky-900 capitalize" style={{ fontSize: 20, fontWeight: '500', color: '#004268' }}>
-                        Data Trafomu
+                        {i18n.t("traf")}
                     </Text>
                     <Text className="self-center mt-2 text-base leading-6 text-center text-gray-500" style={{ fontSize: 10, fontWeight: '500', color: '#004268' }}>
-                        Silahkan Masukkan Data Trafomu
+                        {i18n.t("data")}
                     </Text>
                 </View>
                 <View style={{ height: '70%', marginTop: '5%' }}>
-                    <Text className="mt-5 text-base text-sky-900">Nama Perusahaan</Text>
-                    <TextInput style={{ height: 48, width: 355, borderColor: '#FFAC33', borderRadius: 10, borderWidth: 1, marginBottom: 5, marginTop: 12, paddingHorizontal: 10, backgroundColor: 'white' }} placeholder="nama perusahaan" value={namaPerusahaan}
+                    <Text className="mt-5 text-base text-sky-900">{i18n.t("com")}</Text>
+                    <TextInput style={{ height: 48, width: 355, borderColor: '#FFAC33', borderRadius: 10, borderWidth: 1, marginBottom: 5, marginTop: 12, paddingHorizontal: 10, backgroundColor: 'white' }} placeholder={i18n.t('com')} value={namaPerusahaan}
                         onChangeText={handleNamaPerusahaanChange} />
-                    <Text className="mt-5 text-base text-sky-900">Nama Trafo</Text>
-                    <TextInput style={{ height: 48, width: 355, borderColor: '#FFAC33', borderRadius: 10, borderWidth: 1, marginBottom: 5, marginTop: 12, paddingHorizontal: 10, backgroundColor: 'white' }} placeholder="nama trafo" value={namaTrafo}
+                    <Text className="mt-5 text-base text-sky-900">{i18n.t("trafnam")}</Text>
+                    <TextInput style={{ height: 48, width: 355, borderColor: '#FFAC33', borderRadius: 10, borderWidth: 1, marginBottom: 5, marginTop: 12, paddingHorizontal: 10, backgroundColor: 'white' }} placeholder={i18n.t('trafnam')} value={namaTrafo}
                         onChangeText={handleNamaTrafoChange} />
-                    <Text className="mt-2 text-base text-sky-900">Lokasi Trafo</Text>
-                    <TextInput style={{ height: 48, width: 355, borderColor: '#FFAC33', borderRadius: 10, borderWidth: 1, marginBottom: 5, marginTop: 12, paddingHorizontal: 10, backgroundColor: 'white' }} placeholder="Lokasi Trafo" value={lokasiTrafo}
+                    <Text className="mt-2 text-base text-sky-900">{i18n.t("loctraf")}</Text>
+                    <TextInput style={{ height: 48, width: 355, borderColor: '#FFAC33', borderRadius: 10, borderWidth: 1, marginBottom: 5, marginTop: 12, paddingHorizontal: 10, backgroundColor: 'white' }} placeholder={i18n.t('loctraf')} value={lokasiTrafo}
                         onChangeText={handleLokasiTrafoChange} />
 
                     <TouchableOpacity style={{ justifyContent: 'center',
@@ -109,7 +114,7 @@ const Filltrafodata = ({ navigation, route }) => {
                         borderRadius: 10,
                     }} onPress={saveTransformatorData}>
 
-                        <Text style={{ fontSize: 20, fontWeight: '600', color: '#FFFFFF'}}>Simpan</Text>
+                        <Text style={{ fontSize: 20, fontWeight: '600', color: '#FFFFFF'}}>{i18n.t("save")}</Text>
                     </TouchableOpacity>
                 </View>
                 {/* Komponen FancyAlert untuk menampilkan pesan kesalahan */}
@@ -124,7 +129,7 @@ const Filltrafodata = ({ navigation, route }) => {
                             <View style={styles.iconContainer}>
                                 <Text style={styles.iconText}>X</Text>
                             </View>
-                            <Text style={styles.messageText}>Mohon lengkapi semua data terlebih dahulu!</Text>
+                            <Text style={styles.messageText}>{i18n.t("compact")}</Text>
                             <TouchableHighlight
                                 style={styles.buttonContainer}
                                 onPress={handleClose}

@@ -1,6 +1,8 @@
 import Routes from './src/routes';
 import { ToastProvider } from 'react-native-toast-notifications';
 import React from 'react';
+import i18n from './i18n';
+import { LanguageProvider } from './src/utils/LanguageContext';
 
 export default function App() {
   return (
@@ -22,7 +24,9 @@ export default function App() {
       
       {/* Routes komponen yang diimpor dari file './src/routes' yang akan digunakan untuk menavigasi antarmuka pengguna 
       aplikasi Ini adalah tempat utama di mana tampilan aplikasi akan diatur. */}
+        <LanguageProvider>
         <Routes />
+        </LanguageProvider>
       </ToastProvider>
     </React.Fragment>
   );

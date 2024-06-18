@@ -7,9 +7,12 @@ import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/
 import { Ionicons } from '@expo/vector-icons';
 import { doc, setDoc } from 'firebase/firestore';
 import {Picker} from '@react-native-picker/picker';
+import * as localization from 'expo-localization';
+import i18n from '../../../i18n';
+import { useLanguage } from '../../utils/LanguageContext'
 
 const Signup = () => {
-
+    const { language } = useLanguage();
     const [inputs, setInputs] = useState({
         fullname: { value: '', isValid: true },
         email: { value: '', isValid: true },
@@ -147,14 +150,14 @@ const Signup = () => {
             <View style={{ flex: 1, flexDirection: 'column', paddingBottom: 20, paddingLeft: 20, marginHorizontal: 'auto', width: '100%', backgroundColor: '#FFF6E9', maxWidth: 480 }}>
                 <View style={{ marginTop: '25%', justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ textAlign: 'center', fontSize: 24, fontWeight: '600', color: '#004268' }}>
-                        Create Account
+                        {i18n.t('create')}
                     </Text>
                     <Text style={{ textAlign: 'center', fontSize: 16, color: '#6B7280', marginTop: 10 }}>
-                        Let’s Create Account Together
+                        {i18n.t('come')}
                     </Text>
                 </View>
                 <View style={{ height: '70%', marginTop: '15%' }}>
-                    <Text style={{ marginTop: 5, fontSize: 16, color: '#004268' }}>Your Name</Text>
+                    <Text style={{ marginTop: 5, fontSize: 16, color: '#004268' }}>{i18n.t('yourn')}</Text>
                     <TextInput style={{ height: 48, width: 355, borderColor: '#FFAC33', borderRadius: 10, borderWidth: 1, marginBottom: 5, marginTop: 12, paddingHorizontal: 15, backgroundColor: 'white' }}
                         label={"Fullname"}
                         placeholder={"Enter FullName"}
@@ -162,7 +165,7 @@ const Signup = () => {
                         onChangeText = {inputChangeHandler.bind(this, 'fullname')}
                     
                         />
-                    <Text style={{ marginTop: 5, fontSize: 16, color: '#004268' }}>Alamat</Text>
+                    <Text style={{ marginTop: 5, fontSize: 16, color: '#004268' }}>{i18n.t('addres')}</Text>
                     <TextInput style={{ height: 48, width: 355, borderColor: '#FFAC33', borderRadius: 10, borderWidth: 1, marginBottom: 5, marginTop: 12, paddingHorizontal: 15, backgroundColor: 'white' }}
                         label={"Alamat"}
                         placeholder={"Enter Address"}
@@ -170,7 +173,7 @@ const Signup = () => {
                         onChangeText = {inputChangeHandler.bind(this, 'alamat')}
                     
                         />
-                        <Text style={{ marginTop: 5, fontSize: 16, color: '#004268' }}>Pilih Jenis Kelamin</Text>
+                        <Text style={{ marginTop: 5, fontSize: 16, color: '#004268' }}>{i18n.t('selectG')}</Text>
                         <View style={{ height: 48, width: 355, borderColor: '#FFAC33', borderRadius: 10, borderWidth: 1, marginBottom: 5, marginTop: 12, paddingHorizontal: 15, backgroundColor: 'white' }}>
                             <Picker
                             style={{ marginBottom: 5, fontSize: 16, color: '#004268' }}
@@ -181,12 +184,12 @@ const Signup = () => {
                                 gender: { value: itemValue, isValid: true }
                             }))
                             }>
-                            <Picker.Item label="Pilih Jenis Kelamin" value={null} />
+                            <Picker.Item label={i18n.t('selectG')} value={null} />
                             <Picker.Item label="Laki-laki" value={true} />
                             <Picker.Item label="Perempuan" value={false} />
                             </Picker>
                         </View>
-                    <Text style={{ marginTop: 5, fontSize: 16, color: '#004268' }}>Email Address</Text>
+                    <Text style={{ marginTop: 5, fontSize: 16, color: '#004268' }}>{i18n.t('addEm')}</Text>
                     <TextInput style={{ height: 48, width: 355, borderColor: '#FFAC33', borderRadius: 10, borderWidth: 1, marginBottom: 5, marginTop: 12, paddingHorizontal: 15, backgroundColor: 'white' }}
                         label={"Email"}
                         placeholder={"Enter Email"}
@@ -211,13 +214,13 @@ const Signup = () => {
                     </View>
 
                     <Pressable style={{ justifyContent: 'center', height: 54, width: 355, alignItems: 'center', paddingHorizontal: 8, paddingVertical: 4, marginTop: 50, backgroundColor: '#FFAC33', borderRadius: 10 }} onPress={handleRegister}>
-                        <Text style={{ fontSize: 20, fontWeight: '600', color: '#FFFFFF' }}>Sign Up</Text>
+                        <Text style={{ fontSize: 20, fontWeight: '600', color: '#FFFFFF' }}>{i18n.t('regis')}</Text>
                     </Pressable>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-                        <Text style={{ fontSize: 14, color: '#004268' }}>Already Have An Account?</Text>
+                        <Text style={{ fontSize: 14, color: '#004268' }}>{i18n.t('already')} ?</Text>
                         <Pressable onPress={handleLogin}>
-                            <Text style={{ fontSize: 14, fontWeight: '600', color: '#004268', marginLeft: 5 }}>Sign In</Text>
+                            <Text style={{ fontSize: 14, fontWeight: '600', color: '#004268', marginLeft: 5 }}>{i18n.t('signin')}</Text>
                         </Pressable>
                     </View>
                 </View>

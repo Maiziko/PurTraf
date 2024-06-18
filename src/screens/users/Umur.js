@@ -6,8 +6,12 @@ import { KeyboardAvoidingView, Platform } from 'react-native';
 import { firebaseAuth, firestore } from '../../config/firebase'
 import { destroyKey, getKey } from '../../config/localStorage'
 import { doc, getDoc } from 'firebase/firestore';
+import * as Localization from 'expo-localization';
+import i18n from '../../../i18n';
+import { useLanguage } from '../../utils/LanguageContext';
 
 const Umur = ({navigation, route}) => {
+    const { language } = useLanguage();
     // Data Data Gas Trafo
     const [H2Value, setH2Value] = useState('');
     const [CH4Value, setCH4Value] = useState('');
@@ -258,26 +262,26 @@ const [isLoading, setIsLoading] = useState(false);
     let Pred_umur = "";
 
     if (85 < hasil_perhitungan && hasil_perhitungan <= 100) {
-        Kondisi = "Baik";
-        Tindakan = "Perawatan Normal";
-        Pred_umur = "Lebih dari 15 Tahun";
-    } else if (70 < hasil_perhitungan && hasil_perhitungan <= 85) {
-        Kondisi = "Normal";
-        Tindakan = "Perawatan Normal";
-        Pred_umur = "Lebih dari 10 Tahun";
-    } else if (50 < hasil_perhitungan && hasil_perhitungan <= 70) {
-        Kondisi = "Waspada";
-        Tindakan = "Meningkatkan Pengujian atau diagnosis";
-        Pred_umur = "10 Tahun";
-    } else if (30 < hasil_perhitungan && hasil_perhitungan <= 50) {
-        Kondisi = "Jelek";
-        Tindakan = "Memulai perencanaan penanganan resiko";
-        Pred_umur = "Kurang dari 10 Tahun";
-    } else if (0 < hasil_perhitungan && hasil_perhitungan <= 30) {
-        Kondisi = "Sangat Jelek";
-        Tindakan = "Penanganan dan pemulaian resiko";
-        Pred_umur = "Mendekati akhir umur";
-    }
+    Kondisi = i18n.t("good_condition");
+    Tindakan = i18n.t("normal_maintenance");
+    Pred_umur = i18n.t("more_than_15_years");
+} else if (70 < hasil_perhitungan && hasil_perhitungan <= 85) {
+    Kondisi = i18n.t("normal_condition");
+    Tindakan = i18n.t("normal_maintenance");
+    Pred_umur = i18n.t("more_than_10_years");
+} else if (50 < hasil_perhitungan && hasil_perhitungan <= 70) {
+    Kondisi = i18n.t("alert_condition");
+    Tindakan = i18n.t("enhanced_testing");
+    Pred_umur = i18n.t("ten_years");
+} else if (30 < hasil_perhitungan && hasil_perhitungan <= 50) {
+    Kondisi = i18n.t("poor_condition");
+    Tindakan = i18n.t("risk_handling_planning");
+    Pred_umur = i18n.t("less_than_10_years");
+} else if (0 < hasil_perhitungan && hasil_perhitungan <= 30) {
+    Kondisi = i18n.t("very_poor_condition");
+    Tindakan = i18n.t("risk_handling_implementation");
+    Pred_umur = i18n.t("near_end_of_life");
+}
 
     return [Kondisi, Tindakan, Pred_umur];
     };
@@ -696,12 +700,12 @@ const checkDataCompletion = () => {
                     </TouchableOpacity>
                 </View>
                 <View style={{ position : 'relative',justifyContent: 'center',alignContent: 'center' }}>
-                    <Text style={{ marginTop: '10%', fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', textAlign: 'center' }}>Analisis Trafomu</Text>
+                    <Text style={{ marginTop: '10%', fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', textAlign: 'center' }}>{i18n.t("analyze_traf")}</Text>
                 </View>
             </View>
         
             <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 40 }}>
-                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268' }}>Silahkan Masukkan Data Gas</Text>
+                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268' }}>{i18n.t('enter_gas_data')}</Text>
                 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 }}>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
@@ -727,30 +731,30 @@ const checkDataCompletion = () => {
                 </View>
 
                 {/* Silahkan Masukkan Data */}
-                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268' }}>Silahkan Masukkan Data</Text>
+                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268' }}>{i18n.t('dataa')}</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, width: '100%' }}>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
-                        <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>Dielectric Strength</Text>
+                        <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600, fontSize: 12}}>{i18n.t('dielectric_strength')}</Text>
                         <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={DSValue} onChangeText={(text) => handleInputChange(text, setDSValue)} keyboardType="numeric"/>
-                        <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600}}>Acidity</Text>
+                        <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600, fontSize: 12}}>{i18n.t('acidity')}</Text>
                         <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={AcidValue} onChangeText={(text) => handleInputChange(text, setAcidValue)} keyboardType="numeric"/>
                     </View>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
-                        <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>Interfacial Tension</Text>
+                        <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600, fontSize: 12}}>{i18n.t('interfacial_tension')}</Text>
                         <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={ITValue} onChangeText={(text) => handleInputChange(text, setITValue)} keyboardType="numeric"/>
-                        <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600}}>Furan</Text>
+                        <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600, fontSize: 12}}>{i18n.t('furan')}</Text>
                         <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={FuranValue} onChangeText={(text) => handleInputChange(text, setFuranValue)} keyboardType="numeric"/>
                     </View>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
-                        <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>Moisure</Text>
+                        <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600, fontSize: 12}}>{i18n.t('moisture')}</Text>
                         <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={MoisureValue} onChangeText={(text) => handleInputChange(text, setMoisureValue)} keyboardType="numeric"/>
                     </View>
                 </View>
 
-                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268'}}>Silahkan Masukkan Data Banyak Masalah</Text>
+                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268'}}>{i18n.t('problem')}</Text>
 
                 <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
-                    <Text style={{ marginBottom: '2%', color:'#004268', fontWeight: 600}}>Tap Changer</Text>
+                    <Text style={{ marginBottom: '2%', color:'#004268', fontWeight: 600, fontSize: 12}}>{i18n.t('tap_changer')}</Text>
                     <TextInput style={{ height: 52, width: 87, borderColor: '#C0BDBD', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={TCValue} onChangeText={(text) => handleInputChange(text, setTCValue)} keyboardType="numeric"/>
                 </View>
 
@@ -763,7 +767,7 @@ const checkDataCompletion = () => {
                                 marginTop: '10%',
                                 backgroundColor: '#FFAC33',
                                 borderRadius: 10,}} onPress={navigateToHasil}>
-                    <Text style={{ fontSize: 20, fontWeight: '600', color: '#FFFFFF' }}>Analisis Sekarang!</Text>
+                    <Text style={{ fontSize: 20, fontWeight: '600', color: '#FFFFFF' }}>{i18n.t('analyze_now')}</Text>
                 </TouchableOpacity>
             </ScrollView>
             {/* Komponen FancyAlert untuk menampilkan pesan kesalahan */}
@@ -778,7 +782,7 @@ const checkDataCompletion = () => {
                             <View style={styles.iconContainer}>
                                 <Text style={styles.iconText}>X</Text>
                             </View>
-                            <Text style={styles.messageText}>Mohon lengkapi semua data terlebih dahulu!</Text>
+                            <Text style={styles.messageText}>{i18n.t('compact')}</Text>
                             <TouchableHighlight
                                 style={styles.buttonContainer}
                                 onPress={handleClose}
@@ -800,7 +804,7 @@ const checkDataCompletion = () => {
                             <View style={styles.iconContainer}>
                                 <Text style={styles.iconText}>X</Text>
                             </View>
-                            <Text style={styles.messageText}>Data yang valid hanyalah angka!</Text>
+                            <Text style={styles.messageText}>{i18n.t('invalid_number_error')}</Text>
                             <TouchableHighlight
                                 style={styles.buttonContainer}
                                 onPress={handleNumClose}

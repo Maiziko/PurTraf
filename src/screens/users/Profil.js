@@ -5,9 +5,14 @@ import { signOut } from 'firebase/auth'
 import { firebaseAuth, firestore } from '../../config/firebase'
 import { destroyKey, getKey } from '../../config/localStorage'
 import { doc, getDoc } from 'firebase/firestore';
-import { useIsFocused } from '@react-navigation/native'
+import { useIsFocused } from '@react-navigation/native';
+import * as Localization from 'expo-localization';
+import i18n from '../../../i18n';
+import { useLanguage } from '../../utils/LanguageContext';
+
 
 const Profil = ({navigation, route}) => {
+    const { language, changeLanguage } = useLanguage();
     const [isLoading, setIsLoading] = useState(false);
     const [dataUsers, setDataUsers] = useState([]);
     const isFocused = useIsFocused();
@@ -56,7 +61,7 @@ const Profil = ({navigation, route}) => {
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
       </View>
-      <Text style={{ marginTop: '10%', fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', textAlign: 'center' }}>Profile</Text>
+      <Text style={{ marginTop: '10%', fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', textAlign: 'center' }}>{i18n.t('profil')}</Text>
       <View style={{ flexDirection: 'column', alignItems: 'center', marginTop:'2%'}}>
                 <Image
                     source={{ uri: dataUsers.imageUri ? dataUsers.imageUri : `https://ui-avatars.com/api/?name=${dataUsers.fullname}` }}
@@ -82,7 +87,7 @@ const Profil = ({navigation, route}) => {
                                     gender: dataUsers.gender
                 })}>
 
-                                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#ffffff' }}>Edit Profil</Text>
+                                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#ffffff' }}>{i18n.t('editp')}</Text>
                             </TouchableOpacity>
         </View>
 
@@ -94,15 +99,20 @@ const Profil = ({navigation, route}) => {
                         <Text style={{ paddingLeft: 20, fontSize: 15, fontWeight: 'bold', color: '#004268', }}>{dataUsers.fullname}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', height: 52, width: 310, paddingHorizontal: 8, paddingVertical: 4, marginTop: 15, backgroundColor: '#FFC97A', borderRadius: 10,  borderColor: '#FFAC33', borderWidth: 1 }}>
-                        <Text style={{ paddingLeft: 20, fontSize: 15, fontWeight: 'bold', color: '#004268' }}>{dataUsers.gender === true ? 'Laki-laki' : 'Perempuan'}</Text>
+                        <Text style={{ paddingLeft: 20, fontSize: 15, fontWeight: 'bold', color: '#004268' }}>{dataUsers.gender === true ? i18n.t('genderM') : i18n.t('genderL')}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', height: 52, width: 310, paddingHorizontal: 8, paddingVertical: 4, marginTop: 15, backgroundColor: '#FFC97A', borderRadius: 10,  borderColor: '#FFAC33', borderWidth: 1 }}>
                         <Text style={{ paddingLeft: 20, fontSize: 15, fontWeight: 'bold', color: '#004268' }}>{dataUsers.alamat}</Text>
                 </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', height: 52, width: 310, paddingHorizontal: 8, paddingVertical: 4, marginTop: 15, backgroundColor: '#FFC97A', borderRadius: 10,  borderColor: '#FFAC33', borderWidth: 1}}>
+                    <TouchableOpacity onPress={() => changeLanguage(language === 'id' ? 'en' : 'id')}>
+                            <Text style={{ paddingLeft: 20, fontSize: 15, fontWeight: 'bold', color: '#004268' }}>{language === 'id' ? i18n.t('changeToEnglish') : i18n.t('changeToIndonesian')}</Text>
+                    </TouchableOpacity>
+                </View>
                 </View>
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginBottom:'20%'}}>
                     <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', height: 52, width: 100, paddingHorizontal: 8, paddingVertical: 4, marginTop: 15, backgroundColor: '#DD310C', borderRadius: 10, }} onPress={handleLogout}>
-                            <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#ffffff' }}>Log Out</Text>
+                            <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#ffffff' }}>{i18n.t('keluar')}</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -113,7 +123,7 @@ const Profil = ({navigation, route}) => {
               source={require('../../../assets/Home.png')}
               style={{ width: 24, height: 24 }}
             />
-            <Text style={{ marginTop: 5, fontSize: 14, fontWeight: 'bold', color: 'white' }}>Home</Text>
+            <Text style={{ marginTop: 5, fontSize: 14, fontWeight: 'bold', color: 'white' }}>{i18n.t('beranda')}</Text>
           </View>
         </TouchableOpacity>
 
@@ -123,7 +133,7 @@ const Profil = ({navigation, route}) => {
               source={require('../../../assets/Profile.png')}
               style={{ width: 24, height: 24 }}
             />
-            <Text style={{ marginTop: 5, fontSize: 14, fontWeight: 'bold', color: '#424242' }}>Profile</Text>
+            <Text style={{ marginTop: 5, fontSize: 14, fontWeight: 'bold', color: '#424242' }}>{i18n.t('profil')}</Text>
           </View>
         </TouchableOpacity>
       </View>

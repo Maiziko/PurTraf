@@ -6,6 +6,9 @@ import { KeyboardAvoidingView, Platform } from 'react-native';
 import { firebaseAuth, firestore } from '../../config/firebase'
 import { destroyKey, getKey } from '../../config/localStorage'
 import { doc, getDoc } from 'firebase/firestore';
+import * as Localization from 'expo-localization';
+import i18n from '../../../i18n';
+import { useLanguage } from '../../utils/LanguageContext';
 
 const Semua = ({navigation, route}) => {
     // Data Data Gas Trafo
@@ -16,6 +19,8 @@ const Semua = ({navigation, route}) => {
     const [C2H6Value, setC2H6Value] = useState('');
     const [COValue, setCOValue] = useState('');
     const [CO2Value, setCO2Value] = useState('');
+
+    const { language } = useLanguage();
 
     // Data Data TDCG 
     const [awalTdcgValue, setawalTdcgValue] = useState('');
@@ -273,26 +278,26 @@ const [isLoading, setIsLoading] = useState(false);
     let Pred_umur = "";
 
     if (85 < hasil_perhitungan && hasil_perhitungan <= 100) {
-        Kondisi = "Baik";
-        Tindakan = "Perawatan Normal";
-        Pred_umur = "Lebih dari 15 Tahun";
-    } else if (70 < hasil_perhitungan && hasil_perhitungan <= 85) {
-        Kondisi = "Normal";
-        Tindakan = "Perawatan Normal";
-        Pred_umur = "Lebih dari 10 Tahun";
-    } else if (50 < hasil_perhitungan && hasil_perhitungan <= 70) {
-        Kondisi = "Waspada";
-        Tindakan = "Meningkatkan Pengujian atau diagnosis";
-        Pred_umur = "10 Tahun";
-    } else if (30 < hasil_perhitungan && hasil_perhitungan <= 50) {
-        Kondisi = "Jelek";
-        Tindakan = "Memulai perencanaan penanganan resiko";
-        Pred_umur = "Kurang dari 10 Tahun";
-    } else if (0 < hasil_perhitungan && hasil_perhitungan <= 30) {
-        Kondisi = "Sangat Jelek";
-        Tindakan = "Penanganan dan pemulaian resiko";
-        Pred_umur = "Mendekati akhir umur";
-    }
+    Kondisi = i18n.t("good_condition");
+    Tindakan = i18n.t("normal_maintenance");
+    Pred_umur = i18n.t("more_than_15_years");
+} else if (70 < hasil_perhitungan && hasil_perhitungan <= 85) {
+    Kondisi = i18n.t("normal_condition");
+    Tindakan = i18n.t("normal_maintenance");
+    Pred_umur = i18n.t("more_than_10_years");
+} else if (50 < hasil_perhitungan && hasil_perhitungan <= 70) {
+    Kondisi = i18n.t("alert_condition");
+    Tindakan = i18n.t("enhanced_testing");
+    Pred_umur = i18n.t("ten_years");
+} else if (30 < hasil_perhitungan && hasil_perhitungan <= 50) {
+    Kondisi = i18n.t("poor_condition");
+    Tindakan = i18n.t("risk_handling_planning");
+    Pred_umur = i18n.t("less_than_10_years");
+} else if (0 < hasil_perhitungan && hasil_perhitungan <= 30) {
+    Kondisi = i18n.t("very_poor_condition");
+    Tindakan = i18n.t("risk_handling_implementation");
+    Pred_umur = i18n.t("near_end_of_life");
+}
 
     return [Kondisi, Tindakan, Pred_umur];
     };
@@ -302,13 +307,13 @@ const [isLoading, setIsLoading] = useState(false);
         let fault = "";
         const TDCG = Data_Gas.reduce((acc, val) => acc + val, 0);
         if (TDCG <= 720) {
-            fault = "Transformator beroperasi dalam kondisi normal";
+            fault = i18n.t("normal_condition");
         } else if (TDCG >= 721 && TDCG <= 1920) {
-            fault = "Indikasi Komposisi gas mulai tinggi, kemungkinan timbul kegagalan, pencegahan gejala agar tidak berlanjut";
+            fault = i18n.t("high_gas_composition");
         } else if (TDCG > 1920 && TDCG <= 4630) {
-            fault = "Indikasi penguraian tingkat isolasi yang tinggi Kegagalan mungkin telah terjadi. Buat Pencegahan gangguan agar tidak berlanjut";
+            fault = i18n.t("high_insulation_decomposition");
         } else if (TDCG > 4630) {
-            fault = "Indikasi kerusakan sangat tinggi dan dekomposisi isolator sudah tersebar luas. Kerusakan pada transformator segera akan terjadi";
+            fault = i18n.t("extensive_damage");
         }
         return fault;
     }
@@ -322,24 +327,24 @@ const Rogers_Ratio_Method = (Data_Gas) => {
         const R2 = Data_Gas[2] / Data_Gas[3];
         const R5 = Data_Gas[2] / Data_Gas[4];
         if (R2 < 0.1 && (0.1 <= R1 && R1 <= 1.0) && R5 < 0.1) {
-            fault = "Unit Normal";
-        } else if (R2 < 0.1 && R1 < 0.1 && R5 < 0.1) {
-            fault = "Low-energy density arching-PD";
-        } else if ((0.1 <= R2 && R2 <= 1.0) && (0.1 <= R1 && R1 <= 1.0) && R5 > 3.0) {
-            fault = "Arching-High-energy discharge";
-        } else if (R2 < 0.1 && (0.1 <= R1 && R1 <= 1.0) && (0.1 <= R5 && R5 <= 3.0)) {
-            fault = "Low temperatur termal";
-        } else if (R2 < 0.1 && R1 > 1.0 && (0.1 <= R5 && R5 <= 3.0)) {
-            fault = "Thermal < 700 C";
-        } else if (R2 < 0.1 && R1 > 0.1 && R5 > 3.0) {
-            fault = "Thermal > 700";
+            fault = i18n.t("unit_normal");
+            } else if (R2 < 0.1 && R1 < 0.1 && R5 < 0.1) {
+                fault = i18n.t("low_energy_arching");
+            } else if ((0.1 <= R2 && R2 <= 1.0) && (0.1 <= R1 && R1 <= 1.0) && R5 > 3.0) {
+                fault = i18n.t("high_energy_arching");
+            } else if (R2 < 0.1 && (0.1 <= R1 && R1 <= 1.0) && (0.1 <= R5 && R5 <= 3.0)) {
+                fault = i18n.t("low_temperature_thermal");
+            } else if (R2 < 0.1 && R1 > 1.0 && (0.1 <= R5 && R5 <= 3.0)) {
+                fault = i18n.t("thermal_under_700");
+            } else if (R2 < 0.1 && R1 > 0.1 && R5 > 3.0) {
+                fault = i18n.t("thermal_over_700");
+            } else {
+                fault = i18n.t("failure_undetectable");
+            }
         } else {
-            fault = "Kegagalan tidak bisa dideteksi";
+            fault = i18n.t("failure_undetectable");
         }
-    } else {
-        fault = "Rogers Ratio tidak bisa dijalankan";
-    }
-    return fault;
+        return fault;
 }
 
 // KeyGas Method
@@ -364,13 +369,13 @@ const KeyGas_Method = (Data_Gas) => {
         fault = "Data Gas Unvalid untuk di deteksi";
     } else {
         if (detect_gas === 1) {
-            fault = "Thermal Oil";
+            fault = i18n.t("thermal_oil");
         } else if (detect_gas === 2) {
-            fault = "Thermal Discharge";
+            fault = i18n.t("thermal_discharge");
         } else if (detect_gas === 3) {
-            fault = "Partial Discharge";
+            fault = i18n.t("partial_discharge");
         } else if (detect_gas === 4) {
-            fault = "Arching";
+            fault = i18n.t("arching");
         }
     }
     return fault;
@@ -387,16 +392,16 @@ const Doernenburg_Method = (Data_Gas) => {
         const R4 = Data_Gas[4] / Data_Gas[2];
 
         if (R1 > 1.0 && R2 < 0.75 && R3 < 0.75 && R4 > 0.4) {
-            fault = "Dekomposisi termal";
+            fault = i18n.t("thermal_decomposition");
         } else if (R1 < 1.0 && R3 < 0.3 && R4 > 0.4) {
             fault = "Partial Discharge";
         } else if ((0.1 < R1 && R1 < 1.0) && R2 > 0.75 && R3 < 0.75 && R4 > 0.4) {
-            fault = "Arching";
+            fault = i18n.t("arching");
         } else {
-            fault = "Kegagalan tidak bisa terdeteksi";
+            fault = i18n.t("fault_not_detectable");
         }
     } else {
-        fault = "Doesnenburg tidak bisa dijalankan";
+        fault = i18n.t('doern');
     }
     return fault;
 }
@@ -431,14 +436,14 @@ const CO2_CO_Ratio_Method = (Data_Gas) => {
     if (Data_Gas[5] !== 0) {
         const Rasio = Data_Gas[6] / Data_Gas[5];
         if (3 <= Rasio && Rasio <= 10) {
-            fault = "Normal";
+            fault = i18n.t("normal");
         } else {
-            fault = "Fault Detect";
+            fault = i18n.t("fault_detected");
         }
     } else {
-        fault = "CO2/CO Ratio tidak bisa dijalankan";
+        fault = i18n.t("co2_co_ratio_error");
     }
-    return fault;
+    return fault;;
 }
 
 // console.log(`Berdasarkan hasil perhitungan persentase nilai performa kondisi transformator, nilainya menunjukkan sebesar ${hasil_perhitungan.toFixed(2)}% yang berarti trafo berada pada kondisi ${penilaian_trafo(hasil_perhitungan)[0]} dan Memerlukan tindakan ${penilaian_trafo(hasil_perhitungan)[1]} dengan prediksi umur ${penilaian_trafo(hasil_perhitungan)[2]}`);
@@ -797,12 +802,12 @@ const checkDataCompletion = () => {
                     </TouchableOpacity>
                 </View>
                 <View style={{ position : 'relative',justifyContent: 'center',alignContent: 'center' }}>
-                    <Text style={{ marginTop: '10%', fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', textAlign: 'center' }}>Analisis Trafomu</Text>
+                    <Text style={{ marginTop: '10%', fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', textAlign: 'center' }}>{i18n.t('analyze_traf')}</Text>
                 </View>
             </View>
         
             <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 40 }}>
-                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268' }}>Silahkan Masukkan Data Gas</Text>
+                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268' }}>{i18n.t('enter_gas_data')}</Text>
                 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 }}>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
@@ -827,25 +832,25 @@ const checkDataCompletion = () => {
                     </View>
                 </View>
 
-                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268'}}>Silahkan Masukkan Data TDCG</Text>
+                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268'}}>{i18n.t('tdc')}</Text>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, width: '100%' }}>
                     <View style={{ alignItems: 'flex-start' }}>
-                        <Text style={{color:'#004268',fontWeight: 600,marginBottom: '2%',}}>Awal</Text>
+                        <Text style={{color:'#004268',fontWeight: 600,marginBottom: '2%',}}>{i18n.t('start')}</Text>
                         <TextInput style={{ height: 52, width: 150, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={awalTdcgValue} onChangeText={(text) => handleInputChange(text, setawalTdcgValue)} keyboardType="numeric"/>
                     </View>
                     <View style={{ alignItems: 'flex-start' }}>
-                        <Text style={{color:'#004268',fontWeight: 600,marginBottom: '2%',}}>Akhir</Text>
+                        <Text style={{color:'#004268',fontWeight: 600,marginBottom: '2%',}}>{i18n.t('end')}</Text>
                         <TextInput style={{ height: 52, width: 150, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={akhirTdcgValue} onChangeText={(text) => handleInputChange(text, setakhirTdcgValue)} keyboardType="numeric"/>
                     </View>
                 </View>
 
-                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268'}}>Silahkan Masukkan Data tanggal</Text>
+                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268'}}>{i18n.t('tgl')}</Text>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, width: '100%' }}>
                     {/* Tanggal Awal */}
                     <View style={{ alignItems: 'flex-start', position: 'relative' }}>
-                        <Text style={{ color:'#004268', fontWeight: 600, marginBottom: '2%' }}>Awal</Text>
+                        <Text style={{ color:'#004268', fontWeight: 600, marginBottom: '2%' }}>{i18n.t('start')}</Text>
                         <TouchableOpacity style={{ position: 'absolute', zIndex: 1, right: 20, top: 32 }} onPress={() => setShowStartDatePicker(true)}>
                             <Image source={require('../../../assets/tanggal.png')} style={{ width: 23, height: 28 }} />
                         </TouchableOpacity>
@@ -876,7 +881,7 @@ const checkDataCompletion = () => {
                     
                     {/* Tanggal Akhir */}
                     <View style={{ alignItems: 'flex-start', position: 'relative' }}>
-                        <Text style={{ color:'#004268', fontWeight: 600, marginBottom: '2%' }}>Akhir</Text>
+                        <Text style={{ color:'#004268', fontWeight: 600, marginBottom: '2%' }}>{i18n.t('end')}</Text>
                         <TouchableOpacity style={{ position: 'absolute', zIndex: 1, right: 20, top: 32 }} onPress={() => setShowEndDatePicker(true)}>
                             <Image source={require('../../../assets/tanggal.png')} style={{ width: 23, height: 28 }} />
                         </TouchableOpacity>
@@ -906,30 +911,30 @@ const checkDataCompletion = () => {
                 </View>
 
                 {/* Silahkan Masukkan Data */}
-                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268' }}>Silahkan Masukkan Data</Text>
+                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268' }}>{i18n.t('dataa')}</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, width: '100%' }}>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
-                        <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>Dielectric Strength</Text>
+                        <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600, fontSize: 12}}>{i18n.t('dielectric_strength')}</Text>
                         <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={DSValue} onChangeText={(text) => handleInputChange(text, setDSValue)} keyboardType="numeric"/>
-                        <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600}}>Acidity</Text>
+                        <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600, fontSize: 12}}>{i18n.t('acidity')}</Text>
                         <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={AcidValue} onChangeText={(text) => handleInputChange(text, setAcidValue)} keyboardType="numeric"/>
                     </View>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
-                        <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>Interfacial Tension</Text>
+                        <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600, fontSize: 12}}>{i18n.t('interfacial_tension')}</Text>
                         <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={ITValue} onChangeText={(text) => handleInputChange(text, setITValue)} keyboardType="numeric"/>
-                        <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600}}>Furan</Text>
+                        <Text style={{ marginTop: '10%',marginBottom: '2%', color:'#004268',fontWeight: 600, fontSize: 12}}>{i18n.t('furan')}</Text>
                         <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={FuranValue} onChangeText={(text) => handleInputChange(text, setFuranValue)} keyboardType="numeric"/>
                     </View>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
-                        <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600}}>Moisure</Text>
+                        <Text style={{ marginBottom: '2%', color:'#004268',fontWeight: 600, fontSize: 12}}>{i18n.t('moisture')}</Text>
                         <TextInput style={{ height: 52, width: 87, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={MoisureValue} onChangeText={(text) => handleInputChange(text, setMoisureValue)} keyboardType="numeric"/>
                     </View>
                 </View>
 
-                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268'}}>Silahkan Masukkan Data Banyak Masalah</Text>
+                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268'}}>{i18n.t('problem')}</Text>
 
                 <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
-                    <Text style={{ marginBottom: '2%', color:'#004268', fontWeight: 600}}>Tap Changer</Text>
+                    <Text style={{ marginBottom: '2%', color:'#004268', fontWeight: 600, fontSize: 12}}>{i18n.t('tap_changer')}</Text>
                     <TextInput style={{ height: 52, width: 87, borderColor: '#C0BDBD', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={TCValue} onChangeText={(text) => handleInputChange(text, setTCValue)} keyboardType="numeric"/>
                 </View>
 
@@ -942,7 +947,7 @@ const checkDataCompletion = () => {
                                 marginTop: '10%',
                                 backgroundColor: '#FFAC33',
                                 borderRadius: 10,}} onPress={navigateToHasil}>
-                    <Text style={{ fontSize: 20, fontWeight: '600', color: '#FFFFFF' }}>Analisis Sekarang!</Text>
+                    <Text style={{ fontSize: 20, fontWeight: '600', color: '#FFFFFF' }}>{i18n.t('analyze_now')}</Text>
                 </TouchableOpacity>
             </ScrollView>
             {/* Komponen FancyAlert untuk menampilkan pesan kesalahan */}
@@ -957,7 +962,7 @@ const checkDataCompletion = () => {
                             <View style={styles.iconContainer}>
                                 <Text style={styles.iconText}>X</Text>
                             </View>
-                            <Text style={styles.messageText}>Mohon lengkapi semua data terlebih dahulu!</Text>
+                            <Text style={styles.messageText}>{i18n.t('compact')}</Text>
                             <TouchableHighlight
                                 style={styles.buttonContainer}
                                 onPress={handleClose}

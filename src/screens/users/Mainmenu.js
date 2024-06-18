@@ -6,14 +6,10 @@ import { destroyKey, getKey } from '../../config/localStorage'
 import { doc, getDoc } from 'firebase/firestore';
 import { useIsFocused } from '@react-navigation/native';
 // import LinearGradient from 'react-native-linear-gradient';
+import * as Localization from 'expo-localization';
+import i18n from '../../../i18n';
+import { useLanguage } from '../../utils/LanguageContext';
 
-
-const menuItems = [
-    { id: '1', label: 'Umur', imageSource: require('../../../assets/HourglassTop.png') },
-    { id: '2', label: 'Purifikasi', imageSource: require('../../../assets/Purifikasi.png') },
-    { id: '3', label: 'Gangguan', imageSource: require('../../../assets/ExclamationCircleFill.png') },
-    { id: '4', label: 'Semua', imageSource: require('../../../assets/GearWideConnected.png') },
-];
 
 const Mainmenu = ({navigation, route}) => {
     const { userId } = route.params;
@@ -22,6 +18,19 @@ const Mainmenu = ({navigation, route}) => {
     const { selectedMenuId } = route.params || {};
     const [isLoading, setIsLoading] = useState(false);
     const [currentMenuId, setCurrentMenuId] = useState(selectedMenuId);
+    const [menuItems, setMenuItems] = useState([]); // State for menu items
+
+    const { language } = useLanguage();
+
+    // Update menuItems when language changes
+    useEffect(() => {
+        setMenuItems([
+            { id: '1', label: i18n.t('age'), imageSource: require('../../../assets/HourglassTop.png') },
+            { id: '2', label: i18n.t('purification'), imageSource: require('../../../assets/Purifikasi.png') },
+            { id: '3', label: i18n.t('disruption'), imageSource: require('../../../assets/ExclamationCircleFill.png') },
+            { id: '4', label: i18n.t('all'), imageSource: require('../../../assets/GearWideConnected.png') },
+        ]);
+    }, [language]);
 
     useEffect(() => {
         setIsLoading(true)
@@ -61,68 +70,71 @@ const Mainmenu = ({navigation, route}) => {
         navigation.replace('Profil', { userId: userId });
     };
 
-    return(
-        <View style={{ flex: 1, alignItems: 'center', backgroundColor: '#FEEBC8' }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 4, paddingRight: 2.5, paddingBottom: 40, paddingLeft: 5, width: '100%', backgroundColor: '#FFC107' }}>
+    return (
+    <View style={{ flex: 1, alignItems: 'center', backgroundColor: '#FEEBC8' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 4, paddingRight: 2.5, paddingBottom: 40, paddingLeft: 5, width: '100%', backgroundColor: '#FFC107' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: '15%', marginLeft: '5%' }}>
-            <Image
+          <Image
             source={{ uri: dataUsers.imageUri ? dataUsers.imageUri : `https://ui-avatars.com/api/?name=${dataUsers.fullname}` }}
             style={{ position: 'relative', marginTop: 10, width: 60, height: 60, borderRadius: 50 }}
-            />
-            <View style={{ flexDirection: 'column', marginTop: 12, marginLeft: 16 }}>
-            <Text style={{ fontSize: 18, color: 'white' }}>Welcome Back</Text>
-            {dataUsers ? (<Text style={{ marginTop: 2, fontSize: 20, fontWeight: '600', color: 'white' }}>{dataUsers.fullname}</Text>): (<View style={{ marginRight: '2%', marginTop: '15%' }}>
-        <Text style={{ color: '#FFAC33', fontSize: 25, fontWeight: '600' }}>Loading...</Text>
-        </View>)}
-            </View>
+          />
+          <View style={{ flexDirection: 'column', marginTop: 12, marginLeft: 16 }}>
+            <Text style={{ fontSize: 18, color: 'white' }}>{i18n.t('welcomeBack')}</Text>
+            {dataUsers ? (
+              <Text style={{ marginTop: 2, fontSize: 20, fontWeight: '600', color: 'white' }}>{dataUsers.fullname}</Text>
+            ) : (
+              <View style={{ marginRight: '2%', marginTop: '15%' }}>
+                <Text style={{ color: '#FFAC33', fontSize: 25, fontWeight: '600' }}>{i18n.t('loading')}</Text>
+              </View>
+            )}
+          </View>
         </View>
-        <TouchableOpacity onPress={navigateToProfile} style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: 40,paddingTop: 40}}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-end' }}>
+        <TouchableOpacity onPress={navigateToProfile} style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20, paddingTop: 40 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-end' }}>
             <Image
-            source={require('../../../assets/setting.png')}
-            style={{ marginTop: '4%', marginRight: '10%', width: 19, height: 20, tintColor: 'white' }}
+              source={require('../../../assets/setting.png')}
+              style={{ marginTop: '4%', marginRight: '10%', width: 19, height: 20, tintColor: 'white' }}
             />
-        </View>
+          </View>
         </TouchableOpacity>
-        </View>
+      </View>
 
-        <View style={{ marginRight: '2%', marginTop: '15%' }}>
-        <Text style={{ color: '#FFAC33', fontSize: 25, fontWeight: '600' }}>Analisis Kesehatan Trafomu</Text>
-        <Text style={{ marginTop: 3.5, color: '#FFAC33', fontSize: 18, textTransform: 'capitalize' }}>Pilih analisis sesuai kebutuhanmu</Text>
-        </View>
+      <View style={{ marginRight: '2%', marginTop: '15%' }}>
+        <Text style={{ color: '#FFAC33', fontSize: 25, fontWeight: '600' }}>{i18n.t('healthAnalysis')}</Text>
+        <Text style={{ marginTop: 3.5, color: '#FFAC33', fontSize: 18, textTransform: 'capitalize' }}>{i18n.t('selectAnalysis')}</Text>
+      </View>
 
-        <FlatList
+      <FlatList
         data={menuItems}
         renderItem={renderMenuItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ marginTop: '15%', alignItems: 'center' }}
         numColumns={2}
-        />
+      />
 
-        <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row' }}>
         <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 4, backgroundColor: '#FFC107', borderTopRightRadius: 11, borderTopLeftRadius: 11 }}>
-        <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, paddingVertical: 2.5 }}>
+          <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, paddingVertical: 2.5 }}>
             <Image
-                source={require('../../../assets/Home.png')}
-                style={{ width: 24, height: 24 }}
+              source={require('../../../assets/Home.png')}
+              style={{ width: 24, height: 24 }}
             />
-            <Text style={{ marginTop: 5, fontSize: 14, fontWeight: 'bold', color: 'white' }}>Home</Text>
-            </View>
+            <Text style={{ marginTop: 5, fontSize: 14, fontWeight: 'bold', color: 'white' }}>{i18n.t('beranda')}</Text>
+          </View>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={navigateToProfile} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 12, backgroundColor: '#FFD54F', height: 70, borderTopLeftRadius: 11 , borderTopRightRadius: 11}}>
-            <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, paddingVertical: 2.5 }}>
+        <TouchableOpacity onPress={navigateToProfile} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 12, backgroundColor: '#FFD54F', height: 70, borderTopLeftRadius: 11, borderTopRightRadius: 11 }}>
+          <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 5, paddingVertical: 2.5 }}>
             <Image
-                source={require('../../../assets/Profile.png')}
-                style={{ width: 24, height: 24 }}
+              source={require('../../../assets/Profile.png')}
+              style={{ width: 24, height: 24 }}
             />
-            <Text style={{ marginTop: 5, fontSize: 14, fontWeight: 'bold', color: '#424242' }}>Profile</Text>
-            </View>
+            <Text style={{ marginTop: 5, fontSize: 14, fontWeight: 'bold', color: '#424242' }}>{i18n.t('profil')}</Text>
+          </View>
         </TouchableOpacity>
-        </View>
+      </View>
     </View>
-
-    )
+  );
 
 }; 
 export default Mainmenu;

@@ -6,9 +6,13 @@ import { KeyboardAvoidingView, Platform } from 'react-native';
 import { firebaseAuth, firestore } from '../../config/firebase'
 import { destroyKey, getKey } from '../../config/localStorage'
 import { doc, getDoc } from 'firebase/firestore';
+import * as Localization from 'expo-localization';
+import i18n from '../../../i18n';
+import { useLanguage } from '../../utils/LanguageContext';
 
 const Purifikasi = ({navigation, route}) => {
     // Data Data Gas Trafo
+    const { language } = useLanguage();
     const [H2Value, setH2Value] = useState('');
     const [CH4Value, setCH4Value] = useState('');
     const [C2H2Value, setC2H2Value] = useState('');
@@ -437,12 +441,12 @@ const Purifikasi_time = (ppm_day, TDCG_Akhir) => {
                     </TouchableOpacity>
                 </View>
                 <View style={{ position : 'relative',justifyContent: 'center',alignContent: 'center' }}>
-                    <Text style={{ marginTop: '10%', fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', textAlign: 'center' }}>Analisis Waktu Purifikasi</Text>
+                    <Text style={{ marginTop: '10%', fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', textAlign: 'center' }}>{i18n.t('purif')}</Text>
                 </View>
             </View>
         
             <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 40 }}>
-                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268' }}>Silahkan Masukkan Data Gas</Text>
+                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268' }}>{i18n.t('enter_gas_data')}</Text>
                 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 }}>
                     <View style={{ alignItems: 'flex-start', marginBottom: 20 }}>
@@ -467,25 +471,25 @@ const Purifikasi_time = (ppm_day, TDCG_Akhir) => {
                     </View>
                 </View>
 
-                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268'}}>Silahkan Masukkan Data TDCG</Text>
+                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268'}}>{i18n.t('tdc')}</Text>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, width: '100%' }}>
                     <View style={{ alignItems: 'flex-start' }}>
-                        <Text style={{color:'#004268',fontWeight: 600,marginBottom: '2%',}}>Awal</Text>
+                        <Text style={{color:'#004268',fontWeight: 600,marginBottom: '2%',}}>{i18n.t('start')}</Text>
                         <TextInput style={{ height: 52, width: 150, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={awalTdcgValue} onChangeText={(text) => handleInputChange(text, setawalTdcgValue)} keyboardType="numeric"/>
                     </View>
                     <View style={{ alignItems: 'flex-start' }}>
-                        <Text style={{color:'#004268',fontWeight: 600,marginBottom: '2%',}}>Akhir</Text>
+                        <Text style={{color:'#004268',fontWeight: 600,marginBottom: '2%',}}>{i18n.t('end')}</Text>
                         <TextInput style={{ height: 52, width: 150, borderColor: '#FFAC33', borderRadius: 10, backgroundColor: '#C0BDBD', paddingLeft: 15, paddingRight: 15,}} selectionColor = "#004268" value={akhirTdcgValue} onChangeText={(text) => handleInputChange(text, setakhirTdcgValue)} keyboardType="numeric"/>
                     </View>
                 </View>
 
-                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268'}}>Silahkan Masukkan Data tanggal</Text>
+                <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 20 , color:'#004268'}}>{i18n.t('tgl')}</Text>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, width: '100%' }}>
                     {/* Tanggal Awal */}
                     <View style={{ alignItems: 'flex-start', position: 'relative' }}>
-                        <Text style={{ color:'#004268', fontWeight: 600, marginBottom: '2%' }}>Awal</Text>
+                        <Text style={{ color:'#004268', fontWeight: 600, marginBottom: '2%' }}>{i18n.t('start')}</Text>
                         <TouchableOpacity style={{ position: 'absolute', zIndex: 1, right: 20, top: 32 }} onPress={() => setShowStartDatePicker(true)}>
                             <Image source={require('../../../assets/tanggal.png')} style={{ width: 23, height: 28 }} />
                         </TouchableOpacity>
@@ -515,7 +519,7 @@ const Purifikasi_time = (ppm_day, TDCG_Akhir) => {
                     
                     {/* Tanggal Akhir */}
                     <View style={{ alignItems: 'flex-start', position: 'relative' }}>
-                        <Text style={{ color:'#004268', fontWeight: 600, marginBottom: '2%' }}>Akhir</Text>
+                        <Text style={{ color:'#004268', fontWeight: 600, marginBottom: '2%' }}>{i18n.t('end')}</Text>
                         <TouchableOpacity style={{ position: 'absolute', zIndex: 1, right: 20, top: 32 }} onPress={() => setShowEndDatePicker(true)}>
                             <Image source={require('../../../assets/tanggal.png')} style={{ width: 23, height: 28 }} />
                         </TouchableOpacity>
@@ -581,7 +585,7 @@ const Purifikasi_time = (ppm_day, TDCG_Akhir) => {
                                 marginTop: '10%',
                                 backgroundColor: '#FFAC33',
                                 borderRadius: 10,}} onPress={navigateToHasil}>
-                    <Text style={{ fontSize: 20, fontWeight: '600', color: '#FFFFFF' }}>Analisis Sekarang!</Text>
+                    <Text style={{ fontSize: 20, fontWeight: '600', color: '#FFFFFF' }}>{i18n.t('analyze_now')}</Text>
                 </TouchableOpacity>
             </ScrollView>
             {/* Komponen FancyAlert untuk menampilkan pesan kesalahan */}
@@ -596,7 +600,7 @@ const Purifikasi_time = (ppm_day, TDCG_Akhir) => {
                             <View style={styles.iconContainer}>
                                 <Text style={styles.iconText}>X</Text>
                             </View>
-                            <Text style={styles.messageText}>Mohon lengkapi semua data terlebih dahulu!</Text>
+                            <Text style={styles.messageText}>{i18n.t('compact')}</Text>
                             <TouchableHighlight
                                 style={styles.buttonContainer}
                                 onPress={handleClose}

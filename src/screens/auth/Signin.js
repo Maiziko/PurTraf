@@ -6,9 +6,15 @@ import { Toast } from 'react-native-toast-notifications'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { firebaseAuth } from '../../config/firebase'
 import { Ionicons } from '@expo/vector-icons';
+import * as localization from 'expo-localization';
+import i18n from '../../../i18n';
+import { useLanguage } from '../../utils/LanguageContext'
+const setLanguage = (languageCode) => {
+  i18n.locale = languageCode;
+};
 
 const Signin = () => {
-
+    const { language } = useLanguage();
     const [inputs, setInputs] = useState({
         email: {value: '', isValid:true},
         password: {value:'', isValid: true}
@@ -119,10 +125,10 @@ const Signin = () => {
                 </View>
 
                 <View style={{ height: '70%' }}>
-                    <Text style={{ fontSize: 36, color: '#004268', textTransform: 'capitalize' }}>Welcome To</Text>
+                    <Text style={{ fontSize: 36, color: '#004268', textTransform: 'capitalize' }}>{i18n.t('welcome')}</Text>
                     <Text style={{ fontSize: 36, fontWeight: 'bold', color: "#F69912" }}>PurTraf</Text>
-                    <Text style={{ fontSize: 24, color: '#004268', textTransform: 'capitalize' }}>Let’s Sign in</Text>
-                    <Text style={{ fontSize: 16, color: '#004268', marginTop: 5 }}>Email Address</Text>
+                    <Text style={{ fontSize: 24, color: '#004268', textTransform: 'capitalize' }}>{i18n.t('comeon')}</Text>
+                    <Text style={{ fontSize: 16, color: '#004268', marginTop: 5 }}>{i18n.t('addEm')}</Text>
                     <TextInput style={{ height: 48, width: 355, borderColor: '#FFAC33', borderRadius: 10, borderWidth: 1, marginBottom: 5, marginTop: 12, paddingHorizontal: 15, backgroundColor: 'white' }} placeholder="email@gmail.com" label={"Email"} keyboardType="email-address"
 
           // Properti invalid ini digunakan untuk menentukan apakah input email yang dimasukkan oleh pengguna valid atau tidak. 
@@ -151,13 +157,13 @@ const Signin = () => {
                     </View>
 
                     <TouchableOpacity style={{ justifyContent: 'center', height: 54, width: 355, alignItems: 'center', paddingHorizontal: 8, paddingVertical: 4, marginTop: 50, backgroundColor: '#FFAC33', borderRadius: 10 }} onPress={handleLogin}>
-                        <Text style={{ fontSize: 20, fontWeight: '600', color: '#FFFFFF' }}>Sign In</Text>
+                        <Text style={{ fontSize: 20, fontWeight: '600', color: '#FFFFFF' }}>{i18n.t('signin')}</Text>
                     </TouchableOpacity>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-                        <Text style={{ fontSize: 14, color: '#004268' }}>Don't Have An Account?</Text>
+                        <Text style={{ fontSize: 14, color: '#004268' }}>{i18n.t('havent')}?</Text>
                         <TouchableOpacity onPress={handleSignUp}>
-                            <Text style={{ fontSize: 14, fontWeight: '600', color: '#004268', marginLeft: 5 }}>Sign up</Text>
+                            <Text style={{ fontSize: 14, fontWeight: '600', color: '#004268', marginLeft: 5 }}>{i18n.t('regis')}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

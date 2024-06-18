@@ -10,6 +10,9 @@ import Input from '../../components/Input'
 import UploadImage from '../../components/UploadImage'
 import { Ionicons } from '@expo/vector-icons';
 import {Picker} from '@react-native-picker/picker';
+import * as Localization from 'expo-localization';
+import i18n from '../../../i18n';
+import { useLanguage } from '../../utils/LanguageContext';
 
 const UpdateProfile = ({ route, navigation }) => {
 
@@ -267,7 +270,7 @@ const UpdateProfile = ({ route, navigation }) => {
 
         <View style={{ justifyContent: 'center', marginTop: 50, marginLeft:20, marginRight: 20 }}>
           <Input
-            label="Fullname"
+            label={i18n.t('fulname')}
             invalid={!inputs.fullname.isValid}
             textInputConfig={{
               defaultValue: route.params.fullname,
@@ -278,7 +281,7 @@ const UpdateProfile = ({ route, navigation }) => {
 
         <View style={{ justifyContent: 'center', marginTop: 10, marginLeft: 20, marginRight: 20}}>
           <Input
-            label="Alamat"
+            label={i18n.t('addres')}
             invalid={!inputs.alamat.isValid}
             textInputConfig={{
               defaultValue: route.params.alamat,
@@ -288,7 +291,7 @@ const UpdateProfile = ({ route, navigation }) => {
         </View>
 
         <View style={{ justifyContent: 'center', marginTop: 10, marginLeft: 20, marginRight: 20}}>
-            <Text style={{ fontSize: 18,marginBottom: 4,color: '#004268',fontWeight: 'bold' }}>Pilih Jenis Kelamin</Text>
+            <Text style={{ fontSize: 18,marginBottom: 4,color: '#004268',fontWeight: 'bold' }}>{i18n.t("selectG")}</Text>
             <View style={{ backgroundColor: '#FFC97A',paddingHorizontal: 15, borderRadius: 10,color:'#004268', borderColor: '#FFAC33', borderWidth: 1}}>
                 <Picker
                 style={{ color:'#004268', }}
